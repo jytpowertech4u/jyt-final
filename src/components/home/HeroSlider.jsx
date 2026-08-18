@@ -14,7 +14,7 @@ const HeroSlider = () => {
       description: 'Your trusted partner for solar energy solutions in Assam',
       cta: 'Learn More',
       link: '/about',
-      image: './assets/images/slide1.jpg',
+      image: '/images/slide1.jpg',
     },
     {
       title: 'Go Green with Solar Energy',
@@ -22,7 +22,7 @@ const HeroSlider = () => {
       description: 'Reduce your carbon footprint and electricity bills',
       cta: 'Our Services',
       link: '/services',
-      image: './assets/images/slide2.jpg',
+      image: '/images/slide2.jpg',
     },
     {
       title: 'Subsidy up to Rs 1,30,800',
@@ -30,7 +30,7 @@ const HeroSlider = () => {
       description: 'Take advantage of APDCL and MNRE subsidies',
       cta: 'Check Eligibility',
       link: '/schemes',
-      image: './assets/images/slide3.jpg',
+      image: '/images/slide3.jpg',
     },
     {
       title: 'Empowering Assam with Solar',
@@ -38,7 +38,7 @@ const HeroSlider = () => {
       description: 'Join satisfied customers across Assam',
       cta: 'View Projects',
       link: '/projects',
-      image: './assets/images/slide4.jpg',
+      image: '/images/slide4.jpg',
     },
     {
       title: 'Install Solar & Save More',
@@ -46,7 +46,7 @@ const HeroSlider = () => {
       description: '24×7 customer support and maintenance services',
       cta: 'Get Free Quote',
       link: '/contact',
-      image: './assets/images/slide5.jpg',
+      image: '/images/slide5.jpg',
     },
   ];
 

@@ -62,7 +62,7 @@ const Header = () => {
           {/* Logo and Name */}
           <Link to="/" className="flex items-center gap-3">
             <img
-              src="./assets/images/logo.png" // ✅ using public/images like in Footer
+              src="/images/logo.png"
               alt="JYT PowerTech Logo"
               className="w-14 h-14 rounded-full object-cover bg-white p-1"
             />

@@ -13,7 +13,7 @@ const Footer = () => {
             <div className="flex items-center gap-3 mb-4">
               {/* ✅ Using direct image path (no import) */}
               <img
-                src="./assets/images/logo.png"
+                src="/images/logo.png"
                 alt="JYT PowerTech Logo"
                 className="w-14 h-14 object-contain rounded-full bg-white p-1"
               />

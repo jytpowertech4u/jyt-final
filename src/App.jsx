@@ -14,6 +14,7 @@ import PrivacyPolicy from '@/pages/PrivacyPolicy';
 import TermsAndConditions from '@/pages/TermsAndConditions';
 import AdminLogin from '@/pages/admin/AdminLogin';
 import AdminDashboard from '@/pages/admin/AdminDashboard';
+import ResetPassword from '@/pages/admin/ResetPassword';
 import ProtectedRoute from '@/components/admin/ProtectedRoute';
 import { Toaster } from '@/components/ui/toaster';
 import ScrollToTop from '@/ScrollToTop'; // 👈 scrolls page to top on route change
@@ -38,6 +39,7 @@ function App() {
           <Route path="/privacy" element={<PrivacyPolicy />} />
           <Route path="/terms" element={<TermsAndConditions />} />
           <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin/reset-password" element={<ResetPassword />} />
           <Route
             path="/admin"
             element={

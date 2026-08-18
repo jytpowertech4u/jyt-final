@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
-import { LogOut, Inbox, Star, Image as ImageIcon } from 'lucide-react';
+import { LogOut, Inbox, Star, Image as ImageIcon, Settings, User } from 'lucide-react';
 import { supabase } from '@/lib/supabaseClient';
 import LeadsTab from '@/components/admin/LeadsTab';
 import TestimonialsTab from '@/components/admin/TestimonialsTab';
 import GalleryTab from '@/components/admin/GalleryTab';
+import SiteSettingsTab from '@/components/admin/SiteSettingsTab';
+import AccountTab from '@/components/admin/AccountTab';
 
 const TABS = [
   { id: 'leads', label: 'Leads', icon: Inbox },
   { id: 'testimonials', label: 'Testimonials', icon: Star },
-  { id: 'gallery', label: 'Projects Gallery', icon: ImageIcon },
+  { id: 'gallery', label: 'Projects', icon: ImageIcon },
+  { id: 'settings', label: 'Site Settings', icon: Settings },
+  { id: 'account', label: 'Account', icon: User },
 ];
 
 const AdminDashboard = () => {
@@ -30,7 +34,7 @@ const AdminDashboard = () => {
           <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
             <div>
               <h1 className="text-3xl font-bold text-gray-800">Admin Dashboard</h1>
-              <p className="text-gray-500 text-sm">Manage leads, testimonials, and project gallery</p>
+              <p className="text-gray-500 text-sm">Manage leads, testimonials, projects, and site images</p>
             </div>
             <button
               onClick={handleLogout}
@@ -60,6 +64,8 @@ const AdminDashboard = () => {
           {activeTab === 'leads' && <LeadsTab />}
           {activeTab === 'testimonials' && <TestimonialsTab />}
           {activeTab === 'gallery' && <GalleryTab />}
+          {activeTab === 'settings' && <SiteSettingsTab />}
+          {activeTab === 'account' && <AccountTab />}
         </div>
       </div>
     </>

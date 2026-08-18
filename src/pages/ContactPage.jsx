@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import { Helmet } from 'react-helmet';
 import { motion } from 'framer-motion';
-import { MapPin, Phone, Mail, Clock, Send, Loader2, CheckCircle2 } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Send, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useToast } from '@/components/ui/use-toast';
 import { supabase } from '@/lib/supabaseClient';
+import SuccessModal from '@/components/SuccessModal';
 
 const ContactPage = () => {
   const { toast } = useToast();
@@ -13,10 +14,12 @@ const ContactPage = () => {
     phone: '',
     email: '',
     district: '',
+    system_type: '',
+    capacity: '',
     message: ''
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
 
   const districts = [
     "Baksa", "Barpeta", "Biswanath", "Bongaigaon", "Cachar", "Charaideo",
@@ -27,21 +30,40 @@ const ContactPage = () => {
     "South Salmara-Mankachar", "Tinsukia", "Udalguri", "West Karbi Anglong"
   ];
 
+  const systemTypes = ['Hybrid', 'On-Grid', 'Off-Grid'];
+  const capacityOptions = ['3-10 KW', '10+ KW'];
+
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value
-    });
+    const { name, value } = e.target;
+
+    if (name === 'phone') {
+      // Only digits, capped at 10
+      const digitsOnly = value.replace(/\D/g, '').slice(0, 10);
+      setFormData((prev) => ({ ...prev, phone: digitsOnly }));
+      return;
+    }
+
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (formData.phone.length !== 10) {
+      toast({
+        variant: 'destructive',
+        title: 'Invalid phone number',
+        description: 'Please enter a valid 10-digit mobile number.',
+      });
+      return;
+    }
+
     setIsSubmitting(true);
 
-    const { name, phone, email, district, message } = formData;
+    const { name, phone, email, district, system_type, capacity, message } = formData;
 
     const { error } = await supabase.from('leads').insert([
-      { name, phone, email, district, message }
+      { name, phone, email, district, system_type, capacity, message }
     ]);
 
     setIsSubmitting(false);
@@ -51,21 +73,19 @@ const ContactPage = () => {
       toast({
         variant: 'destructive',
         title: 'Something went wrong',
-        description: "We couldn't submit your message. Please try again or call us directly.",
+        description: "We couldn't submit your request. Please try again or call us directly.",
       });
       return;
     }
 
-    toast({
-      title: 'Message sent!',
-      description: "Thanks for reaching out — our team will contact you shortly.",
-    });
-    setIsSubmitted(true);
+    setShowSuccess(true);
     setFormData({
       name: '',
       phone: '',
       email: '',
       district: '',
+      system_type: '',
+      capacity: '',
       message: ''
     });
   };
@@ -79,6 +99,13 @@ const ContactPage = () => {
           content="Contact JYT PowerTech for free solar consultation, site visit, and quotes. Call us, WhatsApp, or fill the contact form. Located in Guwahati, Assam."
         />
       </Helmet>
+
+      <SuccessModal
+        open={showSuccess}
+        onClose={() => setShowSuccess(false)}
+        title="Request submitted successfully"
+        message="Our Support Team will contact you shortly."
+      />
 
       <div className="pt-32 pb-20">
         <div className="container mx-auto px-4">
@@ -101,7 +128,7 @@ const ContactPage = () => {
               animate={{ opacity: 1, x: 0 }}
               transition={{ delay: 0.2 }}
             >
-              <h2 className="text-3xl font-bold mb-6 text-gray-800">Send Us a Message</h2>
+              <h2 className="text-3xl font-bold mb-6 text-gray-800">Submit Request</h2>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">Full Name *</label>
@@ -117,15 +144,19 @@ const ContactPage = () => {
                 </div>
 
                 <div>
-                  <label className="block text-gray-700 font-semibold mb-2">Phone Number *</label>
+                  <label className="block text-gray-700 font-semibold mb-2">Mobile Number *</label>
                   <input
                     type="tel"
+                    inputMode="numeric"
                     name="phone"
                     value={formData.phone}
                     onChange={handleChange}
                     required
+                    maxLength={10}
+                    pattern="[0-9]{10}"
+                    title="Enter a 10-digit mobile number"
                     className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-green-600 focus:outline-none"
-                    placeholder="Enter your phone number"
+                    placeholder="10-digit mobile number"
                   />
                 </div>
 
@@ -160,6 +191,40 @@ const ContactPage = () => {
                   </select>
                 </div>
 
+                <div className="grid sm:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-gray-700 font-semibold mb-2">System Type *</label>
+                    <select
+                      name="system_type"
+                      value={formData.system_type}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-green-600 focus:outline-none"
+                    >
+                      <option value="">Select system type</option>
+                      {systemTypes.map((t) => (
+                        <option key={t} value={t}>{t}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-gray-700 font-semibold mb-2">Capacity Required *</label>
+                    <select
+                      name="capacity"
+                      value={formData.capacity}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:border-green-600 focus:outline-none"
+                    >
+                      <option value="">Select capacity</option>
+                      {capacityOptions.map((c) => (
+                        <option key={c} value={c}>{c}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+
                 <div>
                   <label className="block text-gray-700 font-semibold mb-2">Message</label>
                   <textarea
@@ -181,17 +246,12 @@ const ContactPage = () => {
                   {isSubmitting ? (
                     <>
                       <Loader2 className="mr-2 animate-spin" size={20} />
-                      Sending...
-                    </>
-                  ) : isSubmitted ? (
-                    <>
-                      <CheckCircle2 className="mr-2" size={20} />
-                      Sent! Send another
+                      Submitting...
                     </>
                   ) : (
                     <>
                       <Send className="mr-2" size={20} />
-                      Send Message
+                      Submit Request
                     </>
                   )}
                 </Button>

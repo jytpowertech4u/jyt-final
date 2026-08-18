@@ -37,11 +37,37 @@ const ProjectsPage = () => {
     ? projects
     : projects.filter((p) => p.category === activeFilter);
 
+  const ongoingProjects = filteredProjects.filter((p) => p.status === 'ongoing');
+  const completedProjects = filteredProjects.filter((p) => p.status !== 'ongoing');
+
+  const ProjectCard = ({ project, index }) => (
+    <motion.div
+      initial={{ opacity: 0, scale: 0.9 }}
+      animate={{ opacity: 1, scale: 1 }}
+      transition={{ delay: index * 0.08 }}
+      className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition group"
+    >
+      <div className="relative overflow-hidden">
+        <img
+          className="w-full h-64 object-cover group-hover:scale-110 transition duration-300"
+          alt={project.title}
+          src={project.image_url}
+        />
+        <div className="absolute top-4 right-4 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+          {project.category}
+        </div>
+      </div>
+      <div className="p-6">
+        <h3 className="text-xl font-bold mb-2 text-gray-800">{project.title}</h3>
+      </div>
+    </motion.div>
+  );
+
   return (
     <>
       <Helmet>
         <title>Our Projects - Solar Installations Gallery | JYT PowerTech</title>
-        <meta name="description" content="Explore our successful solar installation projects across Assam. View residential and commercial solar projects." />
+        <meta name="description" content="Explore our ongoing and completed solar installation projects across Assam." />
       </Helmet>
 
       <div className="pt-32 pb-20">
@@ -54,7 +80,7 @@ const ProjectsPage = () => {
             <h1 className="text-5xl font-bold mb-4 text-gray-800">Our Projects</h1>
             <div className="w-20 h-1 solar-gradient mx-auto mb-4"></div>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Explore our successful solar installations across Assam
+              Explore our solar installations across Assam
             </p>
           </motion.div>
 
@@ -80,37 +106,41 @@ const ProjectsPage = () => {
               <Loader2 className="animate-spin text-green-600" size={40} />
             </div>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8">
-              {filteredProjects.map((project, index) => (
-                <motion.div
-                  key={project.id}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: index * 0.1 }}
-                  className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition group"
-                >
-                  <div className="relative overflow-hidden">
-                    <img
-                      className="w-full h-64 object-cover group-hover:scale-110 transition duration-300"
-                      alt={project.title}
-                      src={project.image_url}
-                    />
-                    <div className="absolute top-4 right-4 bg-green-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                      {project.category}
-                    </div>
+            <>
+              {ongoingProjects.length > 0 && (
+                <div className="mb-16">
+                  <h2 className="text-3xl font-bold mb-6 text-gray-800 flex items-center gap-3">
+                    <span className="w-3 h-3 rounded-full bg-yellow-500 animate-pulse"></span>
+                    Ongoing Projects
+                  </h2>
+                  <div className="grid md:grid-cols-2 gap-8">
+                    {ongoingProjects.map((project, index) => (
+                      <ProjectCard key={project.id} project={project} index={index} />
+                    ))}
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-bold mb-2 text-gray-800">{project.title}</h3>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-          )}
+                </div>
+              )}
 
-          {!loading && filteredProjects.length === 0 && (
-            <div className="text-center py-12">
-              <p className="text-gray-600 text-xl">No projects found in this category</p>
-            </div>
+              {completedProjects.length > 0 && (
+                <div>
+                  <h2 className="text-3xl font-bold mb-6 text-gray-800 flex items-center gap-3">
+                    <span className="w-3 h-3 rounded-full bg-green-600"></span>
+                    Completed Projects
+                  </h2>
+                  <div className="grid md:grid-cols-2 gap-8">
+                    {completedProjects.map((project, index) => (
+                      <ProjectCard key={project.id} project={project} index={index} />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {filteredProjects.length === 0 && (
+                <div className="text-center py-12">
+                  <p className="text-gray-600 text-xl">No projects found in this category</p>
+                </div>
+              )}
+            </>
           )}
         </div>
       </div>

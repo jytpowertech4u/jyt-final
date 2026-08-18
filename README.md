@@ -6,7 +6,7 @@ Solar energy company website for JYT PowerTech (Assam, India), built with React 
 - React 18 + Vite
 - React Router (clean URLs, `BrowserRouter`)
 - Tailwind CSS + Radix UI + Framer Motion
-- Supabase (Postgres + Auth) for leads, testimonials, and project gallery
+- Supabase (Postgres + Auth + Storage) for leads, testimonials, projects gallery, and site images
 
 ## Local setup
 
@@ -19,19 +19,26 @@ npm run dev
 ## Supabase setup
 
 1. Create a project at supabase.com.
-2. Open **SQL Editor** → paste the contents of `supabase/schema.sql` → **Run**.
-   This creates the `leads`, `testimonials`, and `gallery_images` tables with row-level security policies and seeds a few starter rows.
+2. Open **SQL Editor** → run `supabase/schema.sql` first, then `supabase/schema_v2.sql`.
+   This creates all tables (`leads`, `testimonials`, `gallery_images`, `site_settings`), row-level
+   security policies, and a `site-assets` storage bucket for admin-uploaded images.
 3. Get your keys from **Project Settings → API**: `Project URL` and `anon public` key. Put them in `.env` as `VITE_SUPABASE_URL` and `VITE_SUPABASE_ANON_KEY`.
-4. Create an admin login: **Authentication → Users → Add user** (email + password). Use that to sign in at `/admin/login`.
+4. Create an admin login: **Authentication → Users → Add user** (email + password, toggle "Auto Confirm User" on). Use that to sign in at `/admin/login`.
 
-## Admin panel
+## Admin panel (`/admin/login`)
 
-Visit `/admin/login`, sign in with the Supabase user you created, then manage:
-- **Leads** — every contact form submission, with status tracking (new/contacted/closed)
-- **Testimonials** — shown in the homepage carousel
-- **Projects Gallery** — shown on the homepage preview and the `/projects` page, filterable by category
+- **Leads** — every contact form submission (name, phone, email, district, system type, capacity, message). Click any lead to see full details in a popup. Update status (new/contacted/closed) or delete.
+- **Testimonials** — add, publish/hide, or delete. Shown in the homepage carousel.
+- **Projects** — add new projects with a photo upload, category, and Ongoing/Completed status. They appear automatically on the `/projects` page under the right section, and the 2 most recent show on the homepage.
+- **Site Settings** — upload/replace the logo and all 5 homepage slider images directly — no code changes or GitHub commits needed.
+- **Account** — change your own password anytime while logged in.
 
-`/admin` routes are excluded from search indexing (`robots.txt` + `noindex` meta) and gated behind Supabase Auth + RLS.
+`/admin` routes are excluded from search indexing and gated behind Supabase Auth + row-level security.
+
+### Password reset (no email setup required)
+- **Self-service**: log in → Account tab → set a new password directly.
+- **Forgot password**: click "Forgot password?" on the login page — Supabase sends a reset email automatically (works out of the box on the free plan for low volume).
+- **Manual (fastest, no email at all)**: Supabase Dashboard → Authentication → Users → select the user → Reset Password. Works even if the user forgot their password entirely and can't log in.
 
 ## Deploying to Vercel
 
@@ -43,5 +50,5 @@ Visit `/admin/login`, sign in with the Supabase user you created, then manage:
 4. Deploy. `vercel.json` already handles SPA route rewrites so `/about`, `/admin`, etc. work on refresh/direct link.
 
 ## Notes
-- The contact form saves directly to the `leads` table in Supabase (no more WhatsApp redirect).
-- Images for the gallery are referenced by URL — upload to Supabase Storage (or any image host) and paste the public URL in the admin panel.
+- The contact form saves directly to the `leads` table in Supabase.
+- Logo and slider images fall back to `public/images/...` files if nothing has been uploaded yet in Site Settings — so the site never breaks even before the admin uploads anything.

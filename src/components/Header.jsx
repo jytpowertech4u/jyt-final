@@ -3,11 +3,13 @@ import { Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Menu, X, Phone, MapPin, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useSiteSettings } from '@/lib/useSiteSettings';
 
 const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const location = useLocation();
+  const { logo_url } = useSiteSettings();
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 20);
@@ -62,7 +64,7 @@ const Header = () => {
           {/* Logo and Name */}
           <Link to="/" className="flex items-center gap-3">
             <img
-              src="/images/logo.png"
+              src={logo_url}
               alt="JYT PowerTech Logo"
               className="w-14 h-14 rounded-full object-cover bg-white p-1"
             />

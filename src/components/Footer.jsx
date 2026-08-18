@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { Facebook, Instagram, Linkedin, Youtube, Mail, Phone, MapPin } from 'lucide-react';
+import { useSiteSettings } from '@/lib/useSiteSettings';
 
 const Footer = () => {
+  const { logo_url } = useSiteSettings();
   return (
     <footer className="bg-gray-900 text-gray-300">
       <div className="container mx-auto px-4 py-12">
@@ -13,7 +15,7 @@ const Footer = () => {
             <div className="flex items-center gap-3 mb-4">
               {/* ✅ Using direct image path (no import) */}
               <img
-                src="/images/logo.png"
+                src={logo_url}
                 alt="JYT PowerTech Logo"
                 className="w-14 h-14 object-contain rounded-full bg-white p-1"
               />

@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { useSiteSettings } from '@/lib/useSiteSettings';
 
 const HeroSlider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const { slide1_url, slide2_url, slide3_url, slide4_url, slide5_url } = useSiteSettings();
 
   const slides = [
     {
@@ -14,7 +16,7 @@ const HeroSlider = () => {
       description: 'Your trusted partner for solar energy solutions in Assam',
       cta: 'Learn More',
       link: '/about',
-      image: '/images/slide1.jpg',
+      image: slide1_url,
     },
     {
       title: 'Go Green with Solar Energy',
@@ -22,7 +24,7 @@ const HeroSlider = () => {
       description: 'Reduce your carbon footprint and electricity bills',
       cta: 'Our Services',
       link: '/services',
-      image: '/images/slide2.jpg',
+      image: slide2_url,
     },
     {
       title: 'Subsidy up to Rs 1,30,800',
@@ -30,7 +32,7 @@ const HeroSlider = () => {
       description: 'Take advantage of APDCL and MNRE subsidies',
       cta: 'Check Eligibility',
       link: '/schemes',
-      image: '/images/slide3.jpg',
+      image: slide3_url,
     },
     {
       title: 'Empowering Assam with Solar',
@@ -38,7 +40,7 @@ const HeroSlider = () => {
       description: 'Join satisfied customers across Assam',
       cta: 'View Projects',
       link: '/projects',
-      image: '/images/slide4.jpg',
+      image: slide4_url,
     },
     {
       title: 'Install Solar & Save More',
@@ -46,7 +48,7 @@ const HeroSlider = () => {
       description: '24×7 customer support and maintenance services',
       cta: 'Get Free Quote',
       link: '/contact',
-      image: '/images/slide5.jpg',
+      image: slide5_url,
     },
   ];
 

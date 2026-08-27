@@ -99,6 +99,10 @@ const GalleryTab = () => {
     <div className="space-y-8">
       <form onSubmit={handleAdd} className="bg-white rounded-lg shadow p-5 space-y-3">
         <h3 className="font-semibold text-gray-800 flex items-center gap-2"><Plus size={18} /> Add Project</h3>
+        <p className="text-xs text-gray-400 -mt-2">
+          Recommended: landscape, 1200 x 900px (4:3 ratio). JPG, PNG or WEBP, up to 8MB.
+          The full photo is shown without cropping, so this ratio fits best.
+        </p>
         <div className="grid md:grid-cols-3 gap-3">
           <input
             placeholder="Title (e.g. Residential Villa - Guwahati)"
@@ -152,7 +156,9 @@ const GalleryTab = () => {
         <div className="grid md:grid-cols-2 gap-4">
           {items.map((item) => (
             <div key={item.id} className="bg-white rounded-lg shadow overflow-hidden">
-              <img src={item.image_url} alt={item.title} className="w-full h-40 object-cover" />
+              <div className="w-full h-40 bg-gray-100 flex items-center justify-center overflow-hidden">
+                <img src={item.image_url} alt={item.title} className="w-full h-full object-contain" />
+              </div>
               <div className="p-4 space-y-2">
                 <div className="flex items-center justify-between gap-2">
                   <div>

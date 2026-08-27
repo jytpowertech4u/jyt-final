@@ -5,54 +5,61 @@ import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useSiteSettings } from '@/lib/useSiteSettings';
 
+const SLIDE_CONTENT = [
+  {
+    title: 'Authorized APDCL Solar Vendor',
+    subtitle: 'Government Registered & Certified',
+    description: 'Your trusted partner for solar energy solutions in Assam',
+    cta: 'Learn More',
+    link: '/about',
+    key: 'slide1_url',
+  },
+  {
+    title: 'Go Green with Solar Energy',
+    subtitle: 'Sustainable Power for a Better Tomorrow',
+    description: 'Reduce your carbon footprint and electricity bills',
+    cta: 'Our Services',
+    link: '/services',
+    key: 'slide2_url',
+  },
+  {
+    title: 'Subsidy up to Rs 1,30,800',
+    subtitle: 'Government Solar Schemes Available',
+    description: 'Take advantage of APDCL and MNRE subsidies',
+    cta: 'Check Eligibility',
+    link: '/schemes',
+    key: 'slide3_url',
+  },
+  {
+    title: 'Empowering Assam with Solar',
+    subtitle: '10+ Successful Installations',
+    description: 'Join satisfied customers across Assam',
+    cta: 'View Projects',
+    link: '/projects',
+    key: 'slide4_url',
+  },
+  {
+    title: 'Install Solar & Save More',
+    subtitle: 'Professional Installation & Support',
+    description: '24×7 customer support and maintenance services',
+    cta: 'Get Free Quote',
+    link: '/contact',
+    key: 'slide5_url',
+  },
+];
+
 const HeroSlider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
-  const { slide1_url, slide2_url, slide3_url, slide4_url, slide5_url } = useSiteSettings();
+  const siteSettings = useSiteSettings();
 
-  const slides = [
-    {
-      title: 'Authorized APDCL Solar Vendor',
-      subtitle: 'Government Registered & Certified',
-      description: 'Your trusted partner for solar energy solutions in Assam',
-      cta: 'Learn More',
-      link: '/about',
-      image: slide1_url,
-    },
-    {
-      title: 'Go Green with Solar Energy',
-      subtitle: 'Sustainable Power for a Better Tomorrow',
-      description: 'Reduce your carbon footprint and electricity bills',
-      cta: 'Our Services',
-      link: '/services',
-      image: slide2_url,
-    },
-    {
-      title: 'Subsidy up to Rs 1,30,800',
-      subtitle: 'Government Solar Schemes Available',
-      description: 'Take advantage of APDCL and MNRE subsidies',
-      cta: 'Check Eligibility',
-      link: '/schemes',
-      image: slide3_url,
-    },
-    {
-      title: 'Empowering Assam with Solar',
-      subtitle: '10+ Successful Installations',
-      description: 'Join satisfied customers across Assam',
-      cta: 'View Projects',
-      link: '/projects',
-      image: slide4_url,
-    },
-    {
-      title: 'Install Solar & Save More',
-      subtitle: 'Professional Installation & Support',
-      description: '24×7 customer support and maintenance services',
-      cta: 'Get Free Quote',
-      link: '/contact',
-      image: slide5_url,
-    },
-  ];
+  // Only include slides that have an image uploaded from the admin panel.
+  // No static/default images are used here.
+  const slides = SLIDE_CONTENT
+    .map((slide) => ({ ...slide, image: siteSettings[slide.key] }))
+    .filter((slide) => Boolean(slide.image));
 
   useEffect(() => {
+    if (slides.length === 0) return;
     const timer = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % slides.length);
     }, 5000);
@@ -61,6 +68,25 @@ const HeroSlider = () => {
 
   const nextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
   const prevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+
+  // Graceful fallback while no slider images have been uploaded yet from the admin panel
+  if (slides.length === 0) {
+    return (
+      <div className="relative w-full h-screen overflow-hidden solar-gradient flex items-center justify-center">
+        <div className="text-center text-white px-6 max-w-3xl mx-auto">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4">Authorized APDCL Solar Vendor</h1>
+          <p className="text-xl md:text-2xl mb-8 text-yellow-100">
+            Your trusted partner for solar energy solutions in Assam
+          </p>
+          <Button size="lg" className="bg-white text-green-700 hover:bg-gray-100 text-lg px-8" asChild>
+            <Link to="/contact">Get Free Quote</Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  const active = slides[currentSlide] || slides[0];
 
   return (
     <div className="relative w-full h-screen overflow-hidden">
@@ -73,17 +99,14 @@ const HeroSlider = () => {
           transition={{ duration: 0.8 }}
           className="absolute inset-0"
         >
-          {/* ✅ Fullscreen Image */}
           <img
-            src={slides[currentSlide].image}
-            alt={`Solar panel installation - ${slides[currentSlide].title}`}
+            src={active.image}
+            alt={`Solar panel installation - ${active.title}`}
             className="w-full h-full object-cover object-center"
           />
 
-          {/* ✅ Dark overlay for readability */}
           <div className="absolute inset-0 bg-black/40" />
 
-          {/* ✅ Centered Text Content */}
           <div className="absolute inset-0 flex items-center justify-center">
             <div className="text-center text-white px-6 max-w-3xl mx-auto">
               <motion.h1
@@ -92,7 +115,7 @@ const HeroSlider = () => {
                 transition={{ delay: 0.2 }}
                 className="text-4xl md:text-6xl font-bold mb-4"
               >
-                {slides[currentSlide].title}
+                {active.title}
               </motion.h1>
 
               <motion.p
@@ -101,7 +124,7 @@ const HeroSlider = () => {
                 transition={{ delay: 0.3 }}
                 className="text-xl md:text-2xl mb-2 text-yellow-300"
               >
-                {slides[currentSlide].subtitle}
+                {active.subtitle}
               </motion.p>
 
               <motion.p
@@ -110,7 +133,7 @@ const HeroSlider = () => {
                 transition={{ delay: 0.4 }}
                 className="text-lg md:text-xl mb-8"
               >
-                {slides[currentSlide].description}
+                {active.description}
               </motion.p>
 
               <motion.div
@@ -119,7 +142,7 @@ const HeroSlider = () => {
                 transition={{ delay: 0.5 }}
               >
                 <Button size="lg" className="solar-gradient text-white text-lg px-8" asChild>
-                  <Link to={slides[currentSlide].link}>{slides[currentSlide].cta}</Link>
+                  <Link to={active.link}>{active.cta}</Link>
                 </Button>
               </motion.div>
             </div>
@@ -127,36 +150,38 @@ const HeroSlider = () => {
         </motion.div>
       </AnimatePresence>
 
-      {/* Navigation Arrows */}
-      <button
-        onClick={prevSlide}
-        className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full transition"
-        aria-label="Previous slide"
-      >
-        <ChevronLeft size={32} />
-      </button>
-
-      <button
-        onClick={nextSlide}
-        className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full transition"
-        aria-label="Next slide"
-      >
-        <ChevronRight size={32} />
-      </button>
-
-      {/* Slide Dots */}
-      <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
-        {slides.map((_, index) => (
+      {slides.length > 1 && (
+        <>
           <button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
-            className={`w-3 h-3 rounded-full transition ${
-              index === currentSlide ? 'bg-yellow-400 w-8' : 'bg-white/50'
-            }`}
-            aria-label={`Go to slide ${index + 1}`}
-          />
-        ))}
-      </div>
+            onClick={prevSlide}
+            className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full transition"
+            aria-label="Previous slide"
+          >
+            <ChevronLeft size={32} />
+          </button>
+
+          <button
+            onClick={nextSlide}
+            className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/20 hover:bg-white/30 text-white p-2 rounded-full transition"
+            aria-label="Next slide"
+          >
+            <ChevronRight size={32} />
+          </button>
+
+          <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2">
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => setCurrentSlide(index)}
+                className={`w-3 h-3 rounded-full transition ${
+                  index === currentSlide ? 'bg-yellow-400 w-8' : 'bg-white/50'
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };

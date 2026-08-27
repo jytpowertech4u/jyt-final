@@ -47,9 +47,9 @@ const ProjectsPage = () => {
       transition={{ delay: index * 0.08 }}
       className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition group"
     >
-      <div className="relative overflow-hidden">
+      <div className="relative overflow-hidden bg-gray-100 aspect-[4/3] flex items-center justify-center">
         <img
-          className="w-full h-64 object-cover group-hover:scale-110 transition duration-300"
+          className="w-full h-full object-contain group-hover:scale-105 transition duration-300"
           alt={project.title}
           src={project.image_url}
         />

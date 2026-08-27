@@ -31,7 +31,7 @@ const ContactPage = () => {
   ];
 
   const systemTypes = ['Hybrid', 'On-Grid', 'Off-Grid'];
-  const capacityOptions = ['3-10 KW', '10+ KW'];
+  const capacityOptions = ['3 KW', '4 KW', '5 KW', '6 KW', '7 KW', '8 KW', '9 KW', '10 KW', '10+ KW'];
 
   const handleChange = (e) => {
     const { name, value } = e.target;

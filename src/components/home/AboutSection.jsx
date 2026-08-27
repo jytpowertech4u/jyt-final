@@ -3,8 +3,11 @@ import { motion } from 'framer-motion';
 import { Award, Shield, Users, Zap } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
+import { useSiteSettings } from '@/lib/useSiteSettings';
 
 const AboutSection = () => {
+  const { about_video_url } = useSiteSettings();
+
   const stats = [
     { icon: Award, label: 'Years Experience', value: '1+' },
     { icon: Users, label: 'Happy Customers', value: '10+' },
@@ -22,10 +25,21 @@ const AboutSection = () => {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <img 
-              className="rounded-lg shadow-xl w-full" 
-              alt="JYT PowerTech team installing solar panels"
-             src="./assets/images/AboutSection.jpg" />
+            {about_video_url ? (
+              <video
+                className="rounded-lg shadow-xl w-full aspect-video object-cover"
+                src={about_video_url}
+                autoPlay
+                muted
+                loop
+                playsInline
+                aria-label="JYT PowerTech team installing solar panels"
+              />
+            ) : (
+              <div className="rounded-lg shadow-xl w-full aspect-video bg-gray-200 flex items-center justify-center">
+                <span className="text-gray-400 text-sm">Video coming soon</span>
+              </div>
+            )}
           </motion.div>
 
           <motion.div

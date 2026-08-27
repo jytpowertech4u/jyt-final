@@ -52,3 +52,13 @@ npm run dev
 ## Notes
 - The contact form saves directly to the `leads` table in Supabase.
 - Logo and slider images fall back to `public/images/...` files if nothing has been uploaded yet in Site Settings — so the site never breaks even before the admin uploads anything.
+
+## Update — Dynamic slider, About video, per-KW capacity, uncropped project photos
+
+Run `supabase/schema_v3.sql` in the Supabase SQL Editor (after `schema.sql` and `schema_v2.sql`).
+
+- **Homepage slider**: no longer uses any static image files. Only images uploaded via Admin → Site Settings will show. If none are uploaded yet, the homepage shows a clean text-only fallback banner instead of a broken image.
+- **About section video**: the "team installing solar panels" photo is replaced with an autoplaying, muted, looping video. Upload/replace it from Admin → Site Settings → "About Section Video".
+- **Capacity Required dropdown** (contact form): now offers 3 KW through 10 KW individually, plus "10+ KW", instead of a single "3-10 KW" range.
+- **Project photos**: now always display the full image without cropping (recommended 1200 x 900px, 4:3 ratio) — shown on both the public Projects page and the admin Projects tab.
+- Recommended image/video sizes and formats are shown directly in the admin Site Settings and Projects tabs, so uploads always fit correctly.

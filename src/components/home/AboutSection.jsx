@@ -1,12 +1,21 @@
-import React from 'react';
+import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { Award, Shield, Users, Zap } from 'lucide-react';
+import { Award, Shield, Users, Zap, Volume2, VolumeX } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
 import { useSiteSettings } from '@/lib/useSiteSettings';
 
 const AboutSection = () => {
   const { about_video_url } = useSiteSettings();
+  const videoRef = useRef(null);
+  const [isMuted, setIsMuted] = useState(true);
+
+  const toggleMute = () => {
+    if (videoRef.current) {
+      videoRef.current.muted = !videoRef.current.muted;
+      setIsMuted(videoRef.current.muted);
+    }
+  };
 
   const stats = [
     { icon: Award, label: 'Years Experience', value: '1+' },
@@ -26,15 +35,25 @@ const AboutSection = () => {
             transition={{ duration: 0.6 }}
           >
             {about_video_url ? (
-              <video
-                className="rounded-lg shadow-xl w-full aspect-video object-cover"
-                src={about_video_url}
-                autoPlay
-                muted
-                loop
-                playsInline
-                aria-label="JYT PowerTech team installing solar panels"
-              />
+              <div className="relative rounded-lg shadow-xl overflow-hidden">
+                <video
+                  ref={videoRef}
+                  className="w-full aspect-video object-cover"
+                  src={about_video_url}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  aria-label="JYT PowerTech team installing solar panels"
+                />
+                <button
+                  onClick={toggleMute}
+                  className="absolute bottom-4 right-4 bg-black/60 hover:bg-black/80 text-white p-2.5 rounded-full transition"
+                  aria-label={isMuted ? 'Unmute video' : 'Mute video'}
+                >
+                  {isMuted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+                </button>
+              </div>
             ) : (
               <div className="rounded-lg shadow-xl w-full aspect-video bg-gray-200 flex items-center justify-center">
                 <span className="text-gray-400 text-sm">Video coming soon</span>
